@@ -1,0 +1,46 @@
+image:
+  file: .gitpod.Dockerfile
+
+ports:
+  - name: Chat Interface
+    port: 3000
+    onOpen: open-preview
+    visibility: public
+  - name: n8n Workflows
+    port: 5678
+    onOpen: open-browser
+    visibility: public
+  - name: PostgreSQL
+    port: 5432
+    onOpen: ignore
+    visibility: private
+  - name: Ollama API
+    port: 11434
+    onOpen: ignore
+    visibility: private
+
+tasks:
+  - name: Setup and Start
+    init: |
+      echo "🎵 Configurando Asistente Parranda Vallenata..."
+      chmod +x commands.sh
+      mkdir -p nginx/ssl data logs
+      echo "✅ Entorno configurado"
+    
+    command: |
+      echo "🚀 Iniciando servicios..."
+      sleep 5
+      docker-compose up -d
+      echo "⏳ Esperando servicios (60 segundos)..."
+      sleep 60
+      echo "🤖 Instalando modelo de IA..."
+      docker-compose exec -d ollama ollama pull llama3.1:8b
+      echo "✅ Todo listo!"
+      echo "📱 Chat: $(gp url 3000)"
+      echo "🔧 n8n: $(gp url 5678)"
+      docker-compose ps
+
+vscode:
+  extensions:
+    - ms-azuretools.vscode-docker
+    - ms-vscode.vscode-json
