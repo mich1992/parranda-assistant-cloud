@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Parranda Vallenata en Santa Marta - Asistente Virtual</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <div class="chat-container">
+        <!-- Header -->
+        <div class="chat-header">
+            <div class="header-content">
+                <div class="brand">
+                    <i class="fas fa-music brand-icon"></i>
+                    <div class="brand-text">
+                        <h1>Parranda Vallenata</h1>
+                        <p>Santa Marta, Magdalena</p>
+                    </div>
+                </div>
+                <div class="status-indicator">
+                    <span class="status-dot"></span>
+                    <span>En línea</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Chat Messages Area -->
+        <div class="chat-messages" id="chatMessages">
+            <div class="welcome-message">
+                <div class="welcome-icon">
+                    <i class="fas fa-guitar"></i>
+                </div>
+                <h3>¡Bienvenido!</h3>
+                <p>Soy tu asistente virtual para contratar grupos de parranda vallenata 🎵</p>
+                <p><strong>¿Para qué ocasión necesitas el grupo y en qué fecha?</strong></p>
+            </div>
+        </div>
+
+        <!-- Typing Indicator -->
+        <div class="typing-indicator" id="typingIndicator" style="display: none;">
+            <div class="typing-dots">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+            <span class="typing-text">El asistente está escribiendo...</span>
+        </div>
+
+        <!-- Chat Input -->
+        <div class="chat-input-container">
+            <div class="input-wrapper">
+                <input 
+                    type="text" 
+                    id="messageInput" 
+                    placeholder="Escribe tu mensaje aquí..."
+                    maxlength="500"
+                    autocomplete="off"
+                >
+                <button id="sendButton" class="send-button">
+                    <i class="fas fa-paper-plane"></i>
+                </button>
+            </div>
+            <div class="input-footer">
+                <small>Presiona Enter para enviar • Powered by OpenAI GPT-4</small>
+            </div>
+        </div>
+
+        <!-- Quick Actions -->
+        <div class="quick-actions" id="quickActions">
+            <button class="quick-btn" data-message="¿Cuáles son sus servicios disponibles?">
+                <i class="fas fa-list"></i> Ver Servicios
+            </button>
+            <button class="quick-btn" data-message="¿Cuánto cuesta un grupo típico?">
+                <i class="fas fa-dollar-sign"></i> Precios
+            </button>
+            <button class="quick-btn" data-message="¿Qué zonas cubren en Santa Marta?">
+                <i class="fas fa-map-marker-alt"></i> Cobertura
+            </button>
+        </div>
+    </div>
+
+    <!-- Loading Overlay -->
+    <div class="loading-overlay" id="loadingOverlay" style="display: none;">
+        <div class="loading-spinner">
+            <i class="fas fa-circle-notch fa-spin"></i>
+        </div>
+    </div>
+
+    <script src="chat.js"></script>
+</body>
+</html> 

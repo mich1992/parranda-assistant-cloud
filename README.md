@@ -97,3 +97,203 @@ FRASES PARA RECOPILAR INFORMACIÓN:
 - "Con esos datos ya te puedo dar el precio exacto..."
 
 INICIO: "¡Hola! Me da mucho gusto ayudarte con tu parranda vallenata 🎵 ¿Para qué ocasión necesitas el grupo y en qué fecha?
+
+
+Nodos
+
+{
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "escalacion-supervisor",
+        "options": {}
+      },
+      "id": "1d022666-9f74-46a2-972f-011f464160d8",
+      "name": "Webhook Escalacion",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [
+        -352,
+        -32
+      ],
+      "webhookId": "escalacion-supervisor"
+    },
+    {
+      "parameters": {
+        "schema": {
+          "__rl": true,
+          "value": "public",
+          "mode": "list"
+        },
+        "table": {
+          "__rl": true,
+          "value": "escalaciones",
+          "mode": "list"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "cliente_info": "={{ JSON.stringify($json) }}",
+            "motivo": "={{ $json.motivo || 'escalacion_general' }}",
+            "estado": "pendiente",
+            "telegram_message_id": 0
+          },
+          "matchingColumns": [
+            "id"
+          ],
+          "schema": [
+            {
+              "id": "id",
+              "displayName": "id",
+              "required": false,
+              "defaultMatch": true,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "evento_id",
+              "displayName": "evento_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "cliente_info",
+              "displayName": "cliente_info",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "object",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "motivo",
+              "displayName": "motivo",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "estado",
+              "displayName": "estado",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "telegram_message_id",
+              "displayName": "telegram_message_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "supervisor_response",
+              "displayName": "supervisor_response",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "created_at",
+              "displayName": "created_at",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "dateTime",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "resolved_at",
+              "displayName": "resolved_at",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "dateTime",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "id": "1fc647c0-80e8-4d96-814e-fe8d53fbe46f",
+      "name": "Guardar Escalacion",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.4,
+      "position": [
+        -128,
+        -32
+      ],
+      "credentials": {
+        "postgres": {
+          "id": "vGMpx20ATObket6Z",
+          "name": "Postgres account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ { \"status\": \"success\", \"message\": \"Escalacion recibida correctamente\", \"timestamp\": $now, \"data\": $json } }}",
+        "options": {}
+      },
+      "id": "c802efbd-f9dd-4a95-91e3-5e2446b24fb5",
+      "name": "Respuesta Confirmacion",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [
+        96,
+        -32
+      ]
+    }
+  ],
+  "connections": {
+    "Webhook Escalacion": {
+      "main": [
+        [
+          {
+            "node": "Guardar Escalacion",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Guardar Escalacion": {
+      "main": [
+        [
+          {
+            "node": "Respuesta Confirmacion",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "pinData": {},
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "f14e2d41d56b21d908a1e526f8b15931144b97b9985b2117f02cde821862ff51"
+  }
+}
