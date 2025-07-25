@@ -15,21 +15,6 @@ services:
     networks:
       - parranda_network
 
-  ollama:
-    image: ollama/ollama:latest
-    container_name: parranda_ollama
-    restart: unless-stopped
-    ports:
-      - "11434:11434"
-    volumes:
-      - ollama_data:/root/.ollama
-    environment:
-      - OLLAMA_HOST=0.0.0.0
-      - OLLAMA_KEEP_ALIVE=5m
-      - OLLAMA_MAX_LOADED_MODELS=1
-    networks:
-      - parranda_network
-
   n8n:
     image: n8nio/n8n:latest
     container_name: parranda_n8n
@@ -48,27 +33,29 @@ services:
     networks:
       - parranda_network
 
-  open-webui:
-    image: ghcr.io/open-webui/open-webui:main
-    container_name: parranda_chat
+  parranda-chat:
+    build: 
+      context: ./chat-app
+      dockerfile: Dockerfile
+    container_name: parranda_chat_openai
     restart: unless-stopped
     ports:
-      - "3000:8080"
+      - "3000:3000"
     environment:
-      - OLLAMA_BASE_URL=http://ollama:11434
-      - WEBUI_SECRET_KEY=parranda_secret_2024
-    volumes:
-      - open_webui_data:/app/backend/data
+      - NODE_ENV=production
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - DATABASE_URL=postgresql://parranda_user:parranda_pass123@postgres:5432/parranda_events
+      - N8N_WEBHOOK_URL=http://n8n:5678/webhook/escalacion-supervisor
+      - PORT=3000
     depends_on:
-      - ollama
+      - postgres
+      - n8n
     networks:
       - parranda_network
 
 volumes:
   postgres_data:
-  ollama_data:
   n8n_data:
-  open_webui_data:
 
 networks:
   parranda_network:
